@@ -7,6 +7,7 @@ from fpdf import FPDF
 from datetime import datetime
 import io
 import PyPDF2
+import streamlit.components.v1 as components
 
 # --- 1. CONFIGURATION & THEME ---
 st.set_page_config(layout="wide", page_title="Career Hub Dual Pro", page_icon="🚀")
@@ -209,13 +210,32 @@ profile = st.sidebar.radio(
 is_finance = "Finance" in profile
 set_theme(is_finance)
 
-# >>> CLOCK & DATE <<<
-now_str = datetime.now().strftime("%d %B %Y | %H:%M")
-st.sidebar.markdown(f"""
-<div style='background-color: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px;'>
-    <span style='font-size: 1.2em; font-weight: bold;'>📅 {now_str}</span>
-</div>
-""", unsafe_allow_html=True)
+# >>> CLOCK & DATE (Dynamic via JS) <<<
+clock_html = """
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function updateClock() {
+    const now = new Date();
+    const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    let timeString = now.toLocaleDateString('fr-FR', options).replace(',', ' |');
+    document.getElementById('clock').innerText = "📅 " + timeString;
+}
+setInterval(updateClock, 1000);
+window.onload = updateClock;
+</script>
+</head>
+<body style="margin:0; background-color: transparent;">
+    <div style='background-color: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; text-align: center; font-family: sans-serif; color: inherit;'>
+        <span id="clock" style='font-size: 1.2em; font-weight: bold;'>Loading...</span>
+    </div>
+</body>
+</html>
+"""
+st.sidebar.markdown("<br>", unsafe_allow_html=True) # Spacer
+with st.sidebar:
+    components.html(clock_html, height=60, scrolling=False)
 
 # HEADER
 st.markdown(f"<div class='main-header'><h1>{profile} Dashboard</h1><p>Master 2 Quantitative Finance vs Journaliste/Podcast Pro</p></div>", unsafe_allow_html=True)
