@@ -218,7 +218,7 @@ clock_html = """
 <script>
 function updateClock() {
     const now = new Date();
-    const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
     let timeString = now.toLocaleDateString('fr-FR', options).replace(',', ' |');
     document.getElementById('clock').innerText = "📅 " + timeString;
 }
